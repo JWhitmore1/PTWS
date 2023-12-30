@@ -7,8 +7,13 @@ Author: Joshua Whitmore
 import re
 import os
 import asyncio
-import cv2
+import cv2 as cv
 from ftplib import FTP
+import matplotlib.pyplot as plt
+
+# Hide grid lines
+fig, ax = plt.subplots(figsize=(10,10))
+ax.grid(False)
 
 async def get_images():
     # clear old images
@@ -52,14 +57,29 @@ async def analyse():
     path = './images/'
     local_files = os.listdir('images')
 
-    img = cv2.imread(path + local_files[0], 0)
-    print(img)
+    palette = cv.imread('palette.png')
+    colors = []
+    # fetch all radar colours
+    for i in range(15):
+        x = 3 + (i * 27)
+        colors.append(palette[10, x])
+
+    full_img = cv.imread(path + local_files[0])
+    banner_height = 16
+    img = full_img[banner_height:-banner_height]
+    # unallocate img
+    del full_img
+
+
+    cv.imshow('img', img)
+    cv.waitKey(0)
+    cv.destroyAllWindows()  
 
     pass
 
 async def main():
-    images = await asyncio.gather(get_images())
-    print('Saved radar stills')
+    # images = await asyncio.gather(get_images())
+    # print('Saved radar stills')
 
     await analyse()
 
