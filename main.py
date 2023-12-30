@@ -7,6 +7,7 @@ Author: Joshua Whitmore
 import re
 import os
 import asyncio
+import cv2
 from ftplib import FTP
 
 async def get_images():
@@ -48,11 +49,19 @@ async def analyse():
     extrapolate
     '''
 
+    path = './images/'
+    local_files = os.listdir('images')
+
+    img = cv2.imread(path + local_files[0], 0)
+    print(img)
+
     pass
 
 async def main():
     images = await asyncio.gather(get_images())
     print('Saved radar stills')
+
+    await analyse()
 
 if __name__ == '__main__':
     asyncio.run(main())
